@@ -12,6 +12,7 @@
     rel="stylesheet"
   />
   <style>
+    /* Design tokens and color palette for warm ivory stationery with gold accents */
     :root {
       --bg-ivory: #FDFBF7;
       --paper-cream: #FBF8F1;
@@ -40,7 +41,7 @@
       justify-content: center;
     }
 
-    /* Cotton Paper Grain Texture Overlay */
+    /* Subtle cotton paper grain overlay across the viewport */
     .paper-grain-overlay {
       position: fixed;
       inset: 0;
@@ -52,6 +53,7 @@
       mix-blend-mode: multiply;
     }
 
+    /* Ambient floating golden dust canvas */
     #particles-canvas {
       position: fixed;
       inset: 0;
@@ -73,6 +75,7 @@
       font-family: 'Great Vibes', cursive;
     }
 
+    /* Main responsive container for envelope and 3D book stages */
     .stage-container {
       position: relative;
       z-index: 10;
@@ -289,7 +292,7 @@
       pointer-events: none;
     }
 
-    /* Individual 3D Paper Sheet — Slow 1.35s Turn, Zero Flicker */
+    /* Individual 3D Paper Sheet — 1.35s slow turn with strict backface isolation */
     .paper-leaf {
       position: absolute;
       inset: 0;
@@ -578,7 +581,7 @@
   <!-- Floating Golden Dust Canvas -->
   <canvas id="particles-canvas"></canvas>
 
-  <!-- Main Stage (Zero Edit/Mute Buttons) -->
+  <!-- Main Stage (Zero Edit or Audio-Control Buttons) -->
   <main class="stage-container">
     <!-- =====================================
          STAGE 1: SEALED GOLD-WAX ENVELOPE
@@ -1083,222 +1086,235 @@
     animateParticles();
 
     // ==========================================
-    // 2. UN-MUTABLE AUTO-START ROMANTIC PIANO:
-    //    YIRUMA - "RIVER FLOWS IN YOU" (WEB AUDIO API)
+    // 2. UN-MUTABLE AUTO-START SOOTHING RELAXATION
+    //    MUSIC BY PEDER B HELLAND (WEB AUDIO API)
     // ==========================================
     let audioCtx = null;
-    let reverbNode = null;
+    let reverbSend = null;
     let masterGain = null;
     let isMelodyRunning = false;
     let stepIndex = 0;
 
-    const N = {
-      F3: 174.61, Fs3: 185.00, A3: 220.00, B3: 246.94, Cs4: 277.18,
-      D4: 293.66, E4: 329.63, Fs4: 369.99, Gs4: 415.30, A4: 440.00,
-      B4: 493.88, Cs5: 554.37, D5: 587.33, E5: 659.25, Fs5: 739.99,
-      Gs5: 830.61, A5: 880.00
+    // Warm, calm piano & ambient frequencies for Peder B Helland relaxation style
+    const P = {
+      C3: 130.81, D3: 146.83, E3: 164.81, F3: 174.61, G3: 196.00, A3: 220.00, B3: 246.94,
+      C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.00, A4: 440.00, B4: 493.88,
+      C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99, A5: 880.00
     };
 
-    const riverFlowsMelody = [
-      // Phrase 1: Iconic opening motif
-      [N.A5,  [N.Fs3, N.Cs4, N.A4], 0.90, 0.11],
-      [N.Gs5, [],                   0.55, 0.08],
-      [N.A5,  [],                   0.55, 0.10],
-      [N.Gs5, [],                   0.55, 0.08],
-      [N.A5,  [N.D4, N.A4],         0.85, 0.105],
-      [N.E5,  [],                   0.65, 0.085],
-      [N.A5,  [],                   0.65, 0.10],
-      [N.D5,  [N.A3, N.E4],         1.10, 0.105],
+    // Gentle, unhurried relaxation phrases inspired by Peder B Helland's calm compositions
+    const pederRelaxationSequence = [
+      // Serene opening motif (C major -> A minor warmth)
+      [P.E5,  [P.C3, P.G3, P.E4], 1.35, 0.085],
+      [P.D5,  [],                 0.95, 0.072],
+      [P.C5,  [],                 1.15, 0.078],
+      [P.G4,  [P.A3, P.E4, P.C5], 1.40, 0.082],
+      [P.A4,  [],                 0.95, 0.075],
+      [P.C5,  [],                 1.15, 0.080],
+      [P.D5,  [P.F3, P.C4, P.A4], 1.45, 0.082],
+      [P.E5,  [P.G3, P.D4, B4 = P.B4], 1.60, 0.084],
 
-      // Phrase 2: Gentle ascent
-      [N.A4,  [],                   0.45, 0.07],
-      [N.Cs5, [],                   0.45, 0.08],
-      [N.A5,  [N.E4, N.B4],         0.85, 0.11],
-      [N.Gs5, [],                   0.55, 0.08],
-      [N.A5,  [],                   0.55, 0.10],
-      [N.Gs5, [],                   0.55, 0.08],
-      [N.A5,  [N.Fs3, N.Cs4, N.A4], 0.85, 0.105],
-      [N.E5,  [],                   0.65, 0.085],
-      [N.A5,  [],                   0.65, 0.10],
-      [N.D5,  [N.D4, N.A4],         1.10, 0.105],
+      // Peaceful floating progression (F major -> C major -> G major)
+      [P.F5,  [P.F3, P.A3, P.F4], 1.35, 0.082],
+      [P.E5,  [],                 0.95, 0.074],
+      [P.D5,  [],                 1.10, 0.072],
+      [P.C5,  [P.C3, P.G3, P.E4], 1.50, 0.084],
+      [P.G4,  [],                 0.95, 0.068],
+      [P.A4,  [P.A3, P.E4, P.C5], 1.15, 0.076],
+      [P.E4,  [],                 1.05, 0.068],
+      [P.D4,  [P.G3, P.B3, P.G4], 1.65, 0.078],
 
-      // Phrase 3: Flowing cascade
-      [N.A4,  [],                   0.42, 0.07],
-      [N.Cs5, [],                   0.42, 0.08],
-      [N.E5,  [N.A3, N.E4, N.Cs5],  0.75, 0.10],
-      [N.Fs5, [],                   0.50, 0.09],
-      [N.E5,  [],                   0.50, 0.088],
-      [N.D5,  [N.E4, N.Gs4, N.B4],  0.75, 0.095],
-      [N.Cs5, [],                   0.55, 0.085],
-      [N.B4,  [],                   0.65, 0.082],
-      [N.A4,  [N.Fs3, N.Cs4, N.A4], 1.25, 0.098],
-
-      // Phrase 4: Tender resolution
-      [N.Cs5, [],                   0.50, 0.08],
-      [N.D5,  [N.D4, N.Fs4, N.A4],  0.70, 0.095],
-      [N.E5,  [],                   0.65, 0.10],
-      [N.Cs5, [],                   0.55, 0.085],
-      [N.B4,  [N.E4, N.Gs4],        0.85, 0.092],
-      [N.A4,  [],                   0.60, 0.082],
-      [N.Gs4, [],                   0.65, 0.078],
-      [N.A4,  [N.A3, N.E4, N.Cs5],  1.45, 0.10]
+      // Deep quiet breath (Softly resolving harmonic lullaby)
+      [P.C5,  [P.C3, P.G3, P.E4], 1.30, 0.080],
+      [P.E5,  [],                 1.05, 0.076],
+      [P.G5,  [P.A3, P.E4, P.C5], 1.40, 0.082],
+      [P.E5,  [],                 1.00, 0.074],
+      [P.D5,  [P.F3, P.C4, P.A4], 1.25, 0.076],
+      [P.C5,  [],                 0.95, 0.070],
+      [P.B4,  [P.G3, P.D4, P.B4], 1.20, 0.072],
+      [P.C5,  [P.C3, P.G3, P.E4, P.C5], 1.90, 0.082]
     ];
 
     function initAudioEngine() {
       if (!audioCtx) {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AudioContextClass();
+        try {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContextClass();
 
-        masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(0.85, audioCtx.currentTime);
-        masterGain.connect(audioCtx.destination);
+          masterGain = audioCtx.createGain();
+          masterGain.gain.setValueAtTime(0.82, audioCtx.currentTime);
+          masterGain.connect(audioCtx.destination);
 
-        const delay = audioCtx.createDelay();
-        delay.delayTime.setValueAtTime(0.28, audioCtx.currentTime);
-        const feedback = audioCtx.createGain();
-        feedback.gain.setValueAtTime(0.28, audioCtx.currentTime);
-        const wetFilter = audioCtx.createBiquadFilter();
-        wetFilter.type = 'lowpass';
-        wetFilter.frequency.setValueAtTime(1400, audioCtx.currentTime);
+          // Lush warm stereo-like echo/reverb tail for soothing relaxation ambiance
+          const delay = audioCtx.createDelay();
+          delay.delayTime.setValueAtTime(0.42, audioCtx.currentTime);
 
-        delay.connect(wetFilter);
-        wetFilter.connect(feedback);
-        feedback.connect(delay);
-        wetFilter.connect(masterGain);
+          const feedback = audioCtx.createGain();
+          feedback.gain.setValueAtTime(0.36, audioCtx.currentTime);
 
-        reverbNode = delay;
+          const ambientFilter = audioCtx.createBiquadFilter();
+          ambientFilter.type = 'lowpass';
+          ambientFilter.frequency.setValueAtTime(1050, audioCtx.currentTime);
+
+          delay.connect(ambientFilter);
+          ambientFilter.connect(feedback);
+          feedback.connect(delay);
+          ambientFilter.connect(masterGain);
+
+          reverbSend = delay;
+        } catch (err) {
+          // Graceful fallback if Web Audio is unavailable in an environment
+        }
       }
     }
 
-    function playExpressivePianoNote(freq, duration = 1.8, volume = 0.09) {
+    function playSoothingRelaxationNote(freq, duration = 2.4, volume = 0.08) {
       if (!audioCtx || audioCtx.state !== 'running') return;
-      const now = audioCtx.currentTime;
+      try {
+        const now = audioCtx.currentTime;
 
-      const osc1 = audioCtx.createOscillator();
-      const osc2 = audioCtx.createOscillator();
-      const subOsc = audioCtx.createOscillator();
+        const warmPiano = audioCtx.createOscillator();
+        const softPad = audioCtx.createOscillator();
+        const harmonic = audioCtx.createOscillator();
 
-      const noteGain = audioCtx.createGain();
-      const overtoneGain = audioCtx.createGain();
-      const subGain = audioCtx.createGain();
-      const toneFilter = audioCtx.createBiquadFilter();
+        const pianoGain = audioCtx.createGain();
+        const padGain = audioCtx.createGain();
+        const harmonicGain = audioCtx.createGain();
+        const gentleFilter = audioCtx.createBiquadFilter();
 
-      toneFilter.type = 'lowpass';
-      toneFilter.frequency.setValueAtTime(2100, now);
-      toneFilter.frequency.exponentialRampToValueAtTime(650, now + duration);
+        // Warm lowpass envelope so notes never sound harsh or bright
+        gentleFilter.type = 'lowpass';
+        gentleFilter.frequency.setValueAtTime(1550, now);
+        gentleFilter.frequency.exponentialRampToValueAtTime(460, now + duration);
 
-      osc1.type = 'sine';
-      osc1.frequency.setValueAtTime(freq, now);
+        warmPiano.type = 'sine';
+        warmPiano.frequency.setValueAtTime(freq, now);
 
-      osc2.type = 'triangle';
-      osc2.frequency.setValueAtTime(freq * 2, now);
-      overtoneGain.gain.setValueAtTime(0.14, now);
+        harmonic.type = 'triangle';
+        harmonic.frequency.setValueAtTime(freq * 2, now);
+        harmonicGain.gain.setValueAtTime(0.08, now);
 
-      subOsc.type = 'sine';
-      subOsc.frequency.setValueAtTime(freq * 0.5, now);
-      subGain.gain.setValueAtTime(0.18, now);
+        // Slow-swelling ambient pad underneath for Peder B Helland relaxation feel
+        softPad.type = 'sine';
+        softPad.frequency.setValueAtTime(freq * 0.5, now);
+        padGain.gain.setValueAtTime(0.0001, now);
+        padGain.gain.linearRampToValueAtTime(0.14, now + Math.min(0.8, duration * 0.35));
+        padGain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.8);
 
-      noteGain.gain.setValueAtTime(0.0001, now);
-      noteGain.gain.exponentialRampToValueAtTime(volume, now + 0.032);
-      noteGain.gain.exponentialRampToValueAtTime(volume * 0.48, now + 0.36);
-      noteGain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.55);
+        pianoGain.gain.setValueAtTime(0.0001, now);
+        pianoGain.gain.exponentialRampToValueAtTime(volume, now + 0.06);
+        pianoGain.gain.exponentialRampToValueAtTime(volume * 0.45, now + 0.65);
+        pianoGain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.75);
 
-      osc1.connect(toneFilter);
-      osc2.connect(overtoneGain);
-      overtoneGain.connect(toneFilter);
-      subOsc.connect(subGain);
-      subGain.connect(toneFilter);
+        warmPiano.connect(pianoGain);
+        harmonic.connect(harmonicGain);
+        harmonicGain.connect(pianoGain);
+        pianoGain.connect(gentleFilter);
 
-      toneFilter.connect(noteGain);
-      noteGain.connect(masterGain);
-      if (reverbNode) noteGain.connect(reverbNode);
+        softPad.connect(padGain);
+        padGain.connect(gentleFilter);
 
-      osc1.start(now);
-      osc2.start(now);
-      subOsc.start(now);
+        gentleFilter.connect(masterGain);
+        if (reverbSend) gentleFilter.connect(reverbSend);
 
-      const endAt = now + duration + 0.6;
-      osc1.stop(endAt);
-      osc2.stop(endAt);
-      subOsc.stop(endAt);
-    }
+        warmPiano.start(now);
+        harmonic.start(now);
+        softPad.start(now);
 
-    function playSoftPaperRustle(intensity = 0.08) {
-      if (!audioCtx || audioCtx.state !== 'running') return;
-      const now = audioCtx.currentTime;
-      const duration = 0.42;
-      const sampleCount = Math.floor(audioCtx.sampleRate * duration);
-      const buffer = audioCtx.createBuffer(1, sampleCount, audioCtx.sampleRate);
-      const data = buffer.getChannelData(0);
-
-      let b0 = 0, b1 = 0, b2 = 0;
-      for (let i = 0; i < sampleCount; i++) {
-        const white = Math.random() * 2 - 1;
-        b0 = 0.997 * b0 + white * 0.029;
-        b1 = 0.985 * b1 + white * 0.032;
-        b2 = 0.950 * b2 + white * 0.048;
-        data[i] = (b0 + b1 + b2 + white * 0.16) * 0.5;
+        const stopTime = now + duration + 0.85;
+        warmPiano.stop(stopTime);
+        harmonic.stop(stopTime);
+        softPad.stop(stopTime);
+      } catch (err) {
+        // Ignore transient synthesis errors
       }
-
-      const noiseSource = audioCtx.createBufferSource();
-      noiseSource.buffer = buffer;
-
-      const bandpass = audioCtx.createBiquadFilter();
-      bandpass.type = 'bandpass';
-      bandpass.frequency.setValueAtTime(900, now);
-      bandpass.frequency.exponentialRampToValueAtTime(2200, now + duration * 0.55);
-      bandpass.frequency.exponentialRampToValueAtTime(1050, now + duration);
-      bandpass.Q.setValueAtTime(1.5, now);
-
-      const env = audioCtx.createGain();
-      env.gain.setValueAtTime(0.0001, now);
-      env.gain.exponentialRampToValueAtTime(intensity, now + 0.09);
-      env.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-
-      noiseSource.connect(bandpass);
-      bandpass.connect(env);
-      env.connect(masterGain);
-
-      noiseSource.start(now);
-      noiseSource.stop(now + duration);
     }
 
-    function runMelodyLoop() {
+    function playSoftPaperRustle(intensity = 0.07) {
+      if (!audioCtx || audioCtx.state !== 'running') return;
+      try {
+        const now = audioCtx.currentTime;
+        const duration = 0.45;
+        const sampleCount = Math.floor(audioCtx.sampleRate * duration);
+        const buffer = audioCtx.createBuffer(1, sampleCount, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+
+        let b0 = 0, b1 = 0, b2 = 0;
+        for (let i = 0; i < sampleCount; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.997 * b0 + white * 0.029;
+          b1 = 0.985 * b1 + white * 0.032;
+          b2 = 0.950 * b2 + white * 0.048;
+          data[i] = (b0 + b1 + b2 + white * 0.16) * 0.5;
+        }
+
+        const noiseSource = audioCtx.createBufferSource();
+        noiseSource.buffer = buffer;
+
+        const bandpass = audioCtx.createBiquadFilter();
+        bandpass.type = 'bandpass';
+        bandpass.frequency.setValueAtTime(850, now);
+        bandpass.frequency.exponentialRampToValueAtTime(2000, now + duration * 0.55);
+        bandpass.frequency.exponentialRampToValueAtTime(980, now + duration);
+        bandpass.Q.setValueAtTime(1.5, now);
+
+        const env = audioCtx.createGain();
+        env.gain.setValueAtTime(0.0001, now);
+        env.gain.exponentialRampToValueAtTime(intensity, now + 0.09);
+        env.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+        noiseSource.connect(bandpass);
+        bandpass.connect(env);
+        env.connect(masterGain);
+
+        noiseSource.start(now);
+        noiseSource.stop(now + duration);
+      } catch (err) {
+        // Ignore transient audio buffer errors
+      }
+    }
+
+    function runRelaxationLoop() {
       if (!audioCtx || audioCtx.state !== 'running') {
         isMelodyRunning = false;
         return;
       }
 
-      const [leadFreq, chordFreqs, dur, vel] = riverFlowsMelody[stepIndex % riverFlowsMelody.length];
-      playExpressivePianoNote(leadFreq, dur * 1.75, vel);
+      const [leadFreq, chordFreqs, dur, vel] =
+        pederRelaxationSequence[stepIndex % pederRelaxationSequence.length];
+
+      playSoothingRelaxationNote(leadFreq, dur * 1.95, vel);
 
       chordFreqs.forEach((cFreq, idx) => {
         setTimeout(() => {
           if (audioCtx && audioCtx.state === 'running') {
-            playExpressivePianoNote(cFreq, 2.3, vel * 0.44);
+            playSoothingRelaxationNote(cFreq, 2.85, vel * 0.48);
           }
-        }, idx * 45);
+        }, idx * 90);
       });
 
       stepIndex++;
-      setTimeout(runMelodyLoop, dur * 470);
+      setTimeout(runRelaxationLoop, dur * 640);
     }
 
     function unlockAndStartContinuousMusic() {
       initAudioEngine();
+      if (!audioCtx) return;
+
       if (audioCtx.state === 'suspended') {
         audioCtx.resume().then(() => {
           if (!isMelodyRunning) {
             isMelodyRunning = true;
-            runMelodyLoop();
+            runRelaxationLoop();
           }
         }).catch(() => {});
       } else if (audioCtx.state === 'running' && !isMelodyRunning) {
         isMelodyRunning = true;
-        runMelodyLoop();
+        runRelaxationLoop();
       }
     }
 
+    // Attempt immediate start on page load and guarantee start on very first user touch/click
     window.addEventListener('DOMContentLoaded', unlockAndStartContinuousMusic);
     window.addEventListener('load', unlockAndStartContinuousMusic);
 
@@ -1319,7 +1335,7 @@
       if (isOpened) return;
       isOpened = true;
 
-      playSoftPaperRustle(0.11);
+      playSoftPaperRustle(0.1);
       spawnBurstSparkles();
 
       envelopeCover.classList.add('opening');
@@ -1382,7 +1398,7 @@
         flippingLeaf.classList.add('flipped');
       });
 
-      playSoftPaperRustle(0.085);
+      playSoftPaperRustle(0.08);
       currentPage++;
 
       setTimeout(() => {
@@ -1407,7 +1423,7 @@
         restoringLeaf.classList.remove('flipped');
       });
 
-      playSoftPaperRustle(0.08);
+      playSoftPaperRustle(0.075);
 
       setTimeout(() => {
         updateLeafStackOrder();
@@ -1430,7 +1446,7 @@
       else if (e.key === 'ArrowLeft') turnPrevPage();
     });
 
-    // Touch Swipe Support
+    // Touch Swipe Support for mobile devices
     let touchStartX = 0;
     let touchStartY = 0;
     const bookContainer = document.getElementById('book-container');
@@ -1510,12 +1526,16 @@
     });
 
     function copyTextFallback(text) {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      } catch (err) {
+        // Ignore clipboard restrictions
+      }
     }
 
     function showToast(msg) {
