@@ -1,2 +1,1576 @@
-# Invite
-Invite
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Muslima Uchun Taklifnoma</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg-ivory: #FDFBF7;
+      --paper-cream: #FBF8F1;
+      --gold-main: #C5A059;
+      --gold-light: #E5C687;
+      --gold-dark: #8E6B2B;
+      --ink-dark: #332A20;
+      --ink-soft: #635443;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: radial-gradient(circle at 50% 25%, #FDFBF7 0%, #F4EDE2 65%, #E7DCC8 100%);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--ink-dark);
+      overflow-x: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Cotton Paper Grain Texture Overlay */
+    .paper-grain-overlay {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.25;
+      z-index: 2;
+      mix-blend-mode: multiply;
+    }
+
+    #particles-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .font-serif-letter {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+
+    .font-lora {
+      font-family: 'Lora', Georgia, serif;
+    }
+
+    .font-script {
+      font-family: 'Great Vibes', cursive;
+    }
+
+    .stage-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 450px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* =========================================
+       1. SEALED GOLD-WAX ENVELOPE COVER
+       ========================================= */
+    .envelope-wrapper {
+      position: relative;
+      width: 100%;
+      height: 585px;
+      max-height: 86dvh;
+      border-radius: 22px;
+      background: linear-gradient(160deg, #FDFBF7 0%, #F4EDE2 100%);
+      box-shadow:
+        0 28px 65px -14px rgba(78, 58, 28, 0.22),
+        0 4px 18px rgba(197, 160, 89, 0.16),
+        inset 0 0 0 1.5px rgba(197, 160, 89, 0.4);
+      overflow: hidden;
+      cursor: pointer;
+      perspective: 1400px;
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.75s ease;
+    }
+
+    .envelope-wrapper:hover {
+      transform: translateY(-3px);
+    }
+
+    .envelope-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .envelope-top-flap {
+      transform-origin: top center;
+      transition: transform 0.95s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .envelope-wrapper.opening .envelope-top-flap {
+      transform: rotateX(180deg);
+    }
+
+    .envelope-wrapper.opening {
+      opacity: 0;
+      transform: scale(1.06);
+      pointer-events: none;
+    }
+
+    .seal-anchor {
+      position: absolute;
+      top: 52%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      width: 90%;
+      text-align: center;
+    }
+
+    .wax-seal {
+      width: 94px;
+      height: 94px;
+      border-radius: 9999px;
+      background: radial-gradient(circle at 30% 28%, #f1d997 0%, #C5A059 52%, #926d27 100%);
+      box-shadow:
+        0 16px 32px rgba(82, 58, 18, 0.38),
+        0 4px 10px rgba(82, 58, 18, 0.24),
+        inset 0 2px 6px rgba(255, 251, 238, 0.75),
+        inset 0 -4px 8px rgba(74, 52, 12, 0.48);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: sealPulse 3.2s infinite ease-in-out;
+      overflow: hidden;
+    }
+
+    .wax-seal::before {
+      content: '';
+      position: absolute;
+      inset: 7px;
+      border-radius: 9999px;
+      border: 1.5px dashed rgba(255, 250, 232, 0.78);
+      box-shadow: inset 0 1px 3px rgba(82, 58, 14, 0.35);
+    }
+
+    .wax-seal::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -75%;
+      width: 50%;
+      height: 200%;
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.45) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: rotate(25deg);
+      animation: sealShimmer 4.5s infinite ease-in-out;
+      pointer-events: none;
+    }
+
+    @keyframes sealShimmer {
+      0%, 55% { left: -75%; }
+      85%, 100% { left: 135%; }
+    }
+
+    .wax-seal:hover {
+      transform: scale(1.08);
+    }
+
+    .wax-seal:active {
+      transform: scale(0.95);
+    }
+
+    .seal-monogram {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 700;
+      font-size: 44px;
+      color: #fffef9;
+      text-shadow: 0 2px 5px rgba(82, 58, 14, 0.55);
+      line-height: 1;
+      user-select: none;
+    }
+
+    @keyframes sealPulse {
+      0%, 100% {
+        box-shadow:
+          0 16px 32px rgba(82, 58, 18, 0.36),
+          0 0 0 0 rgba(197, 160, 89, 0.38),
+          inset 0 2px 6px rgba(255, 251, 238, 0.75);
+      }
+      50% {
+        box-shadow:
+          0 18px 36px rgba(82, 58, 18, 0.42),
+          0 0 0 16px rgba(197, 160, 89, 0),
+          inset 0 2px 6px rgba(255, 251, 238, 0.75);
+      }
+    }
+
+    /* =========================================
+       2. SLOW, FLICKER-FREE 3D BOOK PAGE TURNING
+       ========================================= */
+    .book-stage {
+      display: none;
+      width: 100%;
+      position: relative;
+      opacity: 0;
+      transform: translateY(20px) scale(0.97);
+      transition: opacity 0.85s ease, transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .book-stage.visible {
+      display: block;
+    }
+
+    .book-stage.animate-in {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .paper-thickness-edge {
+      position: relative;
+      width: 100%;
+      height: 585px;
+      max-height: 86dvh;
+      border-radius: 6px 20px 20px 6px;
+      background: #EFE5D1;
+      box-shadow:
+        3px 2px 0 #F7EFE0,
+        4px 2px 0 #D9C8A9,
+        7px 4px 0 #F4EAD8,
+        8px 4px 0 #D4C2A1,
+        11px 6px 0 #EFE3CE,
+        12px 6px 0 #CBB894,
+        0 26px 55px -12px rgba(72, 52, 24, 0.28),
+        0 8px 20px rgba(72, 52, 24, 0.12);
+      perspective: 1800px;
+      transform-style: preserve-3d;
+    }
+
+    .book-spine-shadow {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 22px;
+      background: linear-gradient(
+        to right,
+        rgba(88, 65, 32, 0.24) 0%,
+        rgba(88, 65, 32, 0.08) 38%,
+        rgba(255, 255, 255, 0.25) 65%,
+        transparent 100%
+      );
+      border-radius: 6px 0 0 6px;
+      z-index: 60;
+      pointer-events: none;
+    }
+
+    /* Individual 3D Paper Sheet — Slow 1.35s Turn, Zero Flicker */
+    .paper-leaf {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transform-origin: left center;
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+      transition: transform 1.35s cubic-bezier(0.645, 0.045, 0.355, 1);
+      border-radius: 6px 20px 20px 6px;
+      will-change: transform;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    .paper-leaf.flipped {
+      transform: rotateY(-180deg);
+      pointer-events: none;
+    }
+
+    .paper-leaf.settled-hidden {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .leaf-front,
+    .leaf-back {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 6px 20px 20px 6px;
+      overflow: hidden;
+      transform: translateZ(0.5px);
+    }
+
+    .leaf-front {
+      background-color: var(--paper-cream);
+      background-image:
+        radial-gradient(rgba(197, 160, 89, 0.11) 1px, transparent 1px),
+        linear-gradient(180deg, #FDFBF7 0%, #FBF6EC 65%, #F4EDE2 100%);
+      background-size: 16px 16px, 100% 100%;
+      box-shadow: inset 0 0 0 1px rgba(197, 160, 89, 0.42);
+      padding: 10px 10px 10px 13px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .leaf-back {
+      transform: rotateY(180deg) translateZ(0.5px);
+      background: linear-gradient(135deg, #F4EDE2 0%, #EAE0CE 60%, #DFD0B4 100%);
+      box-shadow:
+        inset 0 0 0 1px rgba(197, 160, 89, 0.38),
+        inset 18px 0 34px rgba(78, 58, 28, 0.18);
+      border-radius: 20px 6px 6px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .leaf-cast-shadow {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to right,
+        rgba(56, 42, 22, 0.36) 0%,
+        rgba(56, 42, 22, 0.14) 38%,
+        transparent 78%
+      );
+      opacity: 0;
+      pointer-events: none;
+      z-index: 30;
+    }
+
+    .leaf-cast-shadow.sweeping {
+      animation: pageShadowSweep 1.35s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+    }
+
+    @keyframes pageShadowSweep {
+      0% { opacity: 0.9; }
+      55% { opacity: 0.45; }
+      100% { opacity: 0; }
+    }
+
+    .page-curl-highlight {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 26px;
+      background: linear-gradient(
+        to left,
+        rgba(197, 160, 89, 0.15) 0%,
+        rgba(255, 255, 255, 0.36) 35%,
+        transparent 100%
+      );
+      pointer-events: none;
+    }
+
+    .gold-inner-frame {
+      flex: 1;
+      border: 1px solid rgba(197, 160, 89, 0.52);
+      border-radius: 4px 14px 14px 4px;
+      padding: 16px 16px 12px 18px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto;
+    }
+
+    .ruled-parchment {
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 28px,
+        rgba(197, 160, 89, 0.15) 29px
+      );
+    }
+
+    .tap-zone-prev,
+    .tap-zone-next {
+      position: absolute;
+      top: 44px;
+      bottom: 50px;
+      width: 24px;
+      z-index: 25;
+      cursor: pointer;
+    }
+    .tap-zone-prev { left: 0; }
+    .tap-zone-next { right: 0; }
+
+    /* Form Controls on Page 5 */
+    .stationery-input {
+      width: 100%;
+      background: rgba(255, 254, 250, 0.96);
+      border: 1px solid rgba(197, 160, 89, 0.5);
+      border-radius: 10px;
+      padding: 8px 11px;
+      font-size: 13px;
+      color: var(--ink-dark);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .stationery-input:focus {
+      border-color: var(--gold-main);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.18);
+    }
+
+    .pill-choice {
+      font-size: 11.5px;
+      padding: 4px 11px;
+      border-radius: 9999px;
+      border: 1px solid rgba(197, 160, 89, 0.48);
+      background: rgba(255, 253, 248, 0.9);
+      color: var(--ink-soft);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .pill-choice:hover,
+    .pill-choice.selected {
+      background: var(--gold-main);
+      color: #ffffff;
+      border-color: var(--gold-main);
+    }
+
+    .pill-highlight-dec5 {
+      border-color: #C5A059;
+      background: linear-gradient(135deg, #FFFDF7 0%, #F7EBD2 100%);
+      color: #7D5B1F;
+      font-weight: 600;
+    }
+
+    .pill-highlight-dec5.selected {
+      background: linear-gradient(135deg, #CFA85B 0%, #A98033 100%);
+      color: #ffffff;
+    }
+
+    .gold-action-btn {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #CFA85B 0%, #A87F34 100%);
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 13.5px;
+      letter-spacing: 0.02em;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 10px 20px -6px rgba(142, 107, 43, 0.5);
+      transition: all 0.2s ease;
+    }
+
+    .gold-action-btn:hover {
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, #D8B266 0%, #B58A3C 100%);
+    }
+
+    .nav-btn {
+      padding: 6px 13px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid rgba(197, 160, 89, 0.48);
+      background: rgba(255, 253, 248, 0.92);
+      color: #6B5940;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      position: relative;
+      z-index: 35;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: var(--gold-main);
+      color: #ffffff;
+      border-color: var(--gold-main);
+    }
+
+    .nav-btn-primary {
+      background: linear-gradient(135deg, #CFA85B 0%, #B08538 100%);
+      color: #ffffff;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(142, 107, 43, 0.28);
+    }
+
+    .nav-btn-primary:hover:not(:disabled) {
+      background: linear-gradient(135deg, #D8B266 0%, #BC9042 100%);
+    }
+
+    .dot-indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 9999px;
+      background: rgba(197, 160, 89, 0.34);
+      transition: all 0.25s ease;
+    }
+
+    .dot-indicator.active {
+      width: 18px;
+      background: var(--gold-main);
+    }
+
+    .toast-msg {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(18px);
+      background: #332A20;
+      color: #FDFBF7;
+      padding: 10px 18px;
+      border-radius: 9999px;
+      font-size: 12px;
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.24);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 100;
+      max-width: 92vw;
+      text-align: center;
+    }
+
+    .toast-msg.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Cotton Paper Grain Overlay -->
+  <svg class="paper-grain-overlay" aria-hidden="true">
+    <filter id="luxury-paper-noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.78" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#luxury-paper-noise)" opacity="0.22" />
+  </svg>
+
+  <!-- Floating Golden Dust Canvas -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Main Stage (Zero Edit/Mute Buttons) -->
+  <main class="stage-container">
+    <!-- =====================================
+         STAGE 1: SEALED GOLD-WAX ENVELOPE
+         ===================================== -->
+    <section
+      id="envelope-cover"
+      class="envelope-wrapper"
+      role="button"
+      tabindex="0"
+      aria-label="Konvertni ochish uchun muhrni bosing"
+    >
+      <svg class="envelope-svg" viewBox="0 0 400 600" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="envLeft" x1="0%" y1="0%" x2="100%" y2="50%">
+            <stop offset="0%" stop-color="#F6EEE0" />
+            <stop offset="100%" stop-color="#EDE1CD" />
+          </linearGradient>
+          <linearGradient id="envRight" x1="100%" y1="0%" x2="0%" y2="50%">
+            <stop offset="0%" stop-color="#F6EEE0" />
+            <stop offset="100%" stop-color="#EBDEC8" />
+          </linearGradient>
+          <linearGradient id="envBottom" x1="50%" y1="100%" x2="50%" y2="0%">
+            <stop offset="0%" stop-color="#E9DCC6" />
+            <stop offset="100%" stop-color="#F7EFE2" />
+          </linearGradient>
+          <linearGradient id="envTop" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stop-color="#FCF7EF" />
+            <stop offset="100%" stop-color="#EDE0CB" />
+          </linearGradient>
+          <filter id="envShadow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#7A6036" flood-opacity="0.14" />
+          </filter>
+        </defs>
+
+        <polygon points="0,0 205,310 0,600" fill="url(#envLeft)" />
+        <polygon points="400,0 195,310 400,600" fill="url(#envRight)" />
+        <polygon points="0,600 200,292 400,600" fill="url(#envBottom)" filter="url(#envShadow)" />
+
+        <g class="envelope-top-flap">
+          <polygon points="0,0 400,0 200,324" fill="url(#envTop)" filter="url(#envShadow)" />
+          <line x1="0" y1="0" x2="200" y2="324" stroke="rgba(197,160,89,0.28)" stroke-width="1" />
+          <line x1="400" y1="0" x2="200" y2="324" stroke="rgba(197,160,89,0.28)" stroke-width="1" />
+        </g>
+      </svg>
+
+      <!-- Top Header -->
+      <div class="absolute top-10 inset-x-0 text-center px-6 pointer-events-none">
+        <p class="text-[11px] tracking-[0.28em] uppercase text-[#98815D] font-semibold">
+          Shaxsiy Maktub
+        </p>
+        <p class="font-script text-[42px] text-[#C5A059] mt-1">
+          Muslima uchun
+        </p>
+      </div>
+
+      <!-- Embossed Gold Wax Seal -->
+      <div class="seal-anchor">
+        <div class="wax-seal" id="wax-seal">
+          <span class="seal-monogram">M</span>
+        </div>
+        <div class="space-y-1">
+          <p class="font-serif-letter italic text-[19px] text-[#594935] tracking-wide font-medium">
+            Konvertni ochish uchun muhrni bosing
+          </p>
+        </div>
+      </div>
+
+      <!-- Bottom Label -->
+      <div class="absolute bottom-7 inset-x-0 text-center pointer-events-none">
+        <span class="inline-block text-[11px] text-[#947E5E] bg-white/80 px-3.5 py-1 rounded-full border border-[#C5A059]/35">
+          5 sahifalik samimiy taklifnoma
+        </span>
+      </div>
+    </section>
+
+    <!-- =====================================
+         STAGE 2: 3D BOOKLET (5 EXACT PAGES)
+         ===================================== -->
+    <section id="book-stage" class="book-stage" aria-label="5 sahifalik taklifnoma">
+      <div class="paper-thickness-edge" id="book-container">
+        <div class="book-spine-shadow"></div>
+
+        <!-- ===================================
+             PAGE 1 (z-index: 50) — SAMIMIYAT
+             =================================== -->
+        <article class="paper-leaf" data-leaf="1" style="z-index: 50;">
+          <div class="leaf-front">
+            <div class="page-curl-highlight"></div>
+            <div class="tap-zone-next" data-action="next" title="Keyingi sahifa"></div>
+
+            <div class="gold-inner-frame">
+              <svg class="absolute top-2 left-2 w-6 h-6 text-[#C5A059]/75 pointer-events-none" viewBox="0 0 32 32" fill="none">
+                <path d="M2 22V6C2 3.79086 3.79086 2 6 2H22" stroke="currentColor" stroke-width="1.2" />
+                <circle cx="8" cy="8" r="1.2" fill="currentColor" />
+              </svg>
+              <svg class="absolute top-2 right-2 w-6 h-6 text-[#C5A059]/75 pointer-events-none" viewBox="0 0 32 32" fill="none">
+                <path d="M30 22V6C30 3.79086 28.2091 2 26 2H10" stroke="currentColor" stroke-width="1.2" />
+                <circle cx="24" cy="8" r="1.2" fill="currentColor" />
+              </svg>
+
+              <div>
+                <div class="text-center border-b border-[#C5A059]/25 pb-2.5 mb-3">
+                  <p class="text-[10.5px] tracking-[0.24em] uppercase text-[#9C7E48] font-semibold">
+                    I • SAMIMIYAT
+                  </p>
+                  <h1 class="font-serif-letter italic text-[32px] sm:text-[35px] font-semibold text-[#C5A059] leading-tight mt-0.5">
+                    Muslima...
+                  </h1>
+                </div>
+
+                <div class="ruled-parchment px-1">
+                  <p class="font-lora text-[16px] sm:text-[16.5px] text-[#332A20] leading-[29px]">
+                    Sizning sukutingizni va har bir qaroringizni hurmat qilaman. Bu xat — biror narsani isbotlash yoki sizni noqulay ahvolga solish uchun emas. Shunchaki, ba’zi tuyg‘ular va samimiy niyatlar sovuq ekran ortidagi quruq satrlarga sig‘masligini aytish uchun yozildi.
+                  </p>
+                </div>
+              </div>
+
+              <div class="pt-2.5 border-t border-[#C5A059]/25 flex items-center justify-between">
+                <span class="font-serif-letter italic text-sm text-[#8A6E3E]">1 / 5</span>
+                <div class="flex items-center gap-1.5">
+                  <span class="dot-indicator active"></span>
+                  <span class="dot-indicator"></span>
+                  <span class="dot-indicator"></span>
+                  <span class="dot-indicator"></span>
+                  <span class="dot-indicator"></span>
+                </div>
+                <button type="button" class="nav-btn nav-btn-primary" data-action="next">
+                  Keyingi sahifa →
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="leaf-back">
+            <span class="font-serif-letter font-bold text-4xl text-[#C5A059]/45 select-none">M</span>
+          </div>
+        </article>
+
+        <!-- ===================================
+             PAGE 2 (z-index: 40) — HAQIQAT
+             =================================== -->
+        <article class="paper-leaf" data-leaf="2" style="z-index: 40;">
+          <div class="leaf-front">
+            <div class="leaf-cast-shadow"></div>
+            <div class="page-curl-highlight"></div>
+            <div class="tap-zone-prev" data-action="prev" title="Orqaga"></div>
+            <div class="tap-zone-next" data-action="next" title="Keyingi sahifa"></div>
+
+            <div class="gold-inner-frame">
+              <svg class="absolute top-2 left-2 w-6 h-6 text-[#C5A059]/75 pointer-events-none" viewBox="0 0 32 32" fill="none">
+                <path d="M2 22V6C2 3.79086 3.79086 2 6 2H22" stroke="currentColor" stroke-width="1.2" />
+                <circle cx="8" cy="8" r="1.2" fill="currentColor" />
+              </svg>
+              <svg class="absolute top-2 right-2 w-6 h-6 text-[#C5A059]/75 pointer-events-none" viewBox="0 0 32 32" fill="none">
+                <path d="M30 22V6C30 3.79086 28.2091 2 26 2H10" stroke="currentColor" stroke-width="1.2" />
+                <circle cx="24" cy="8" r="1.2" fill="currentColor" />
+              </svg>
+
+              <div>
+                <div class="text-center border-b border-[#C5A059]/25 pb-2.5 mb-3">
+                  <p class="text-[10.5px] tracking-[0.24em] uppercase text-[#9C7E48] font-semibold">
+                    II • HAQIQAT
+                  </p>
+                  <h2 class="font-serif-letter italic text-[28px] sm:text-[31px] font-semibold text-[#967231] mt-1">
+                    Jonli suhbat qadri
+                  </h2>
+                </div>
+
+                <div class="ruled-parchment px-1">
+                  <p class="font-lora text-[16px] sm:text-[16.5px] text-[#332A20] leading-[29px]">
+                    Yozishmalarda ko‘p narsa noto‘g‘ri talqin qilinadi, ohang yo‘qoladi, masofa esa tushunmovchiliklarni kattalashtiradi. Ba’zan esa bitta xotirjam nigoh va samimiy tabassum o‘nlab xabarlardan ko‘ra rostgo‘yroq va iliqroq bo‘ladi.
+                  </p>
+                </div>
+              </div>
+
+              <div class="pt-2.5 border-t border-[#C5A059]/25 flex items-center justify-between">
+                <button type="button" class="nav-btn" data-action="prev">← Orqaga</button>
+                <span class="font-serif-letter italic text-sm text-[#8A6E3E]">2 / 5</span>
+                <button type="button" class="nav-btn nav-btn-primary" data-action="next">Keyingi sahifa →</button>
+              </div>
+            </div>
+          </div>
+          <div class="leaf-back">
+            <span class="font-serif-letter font-bold text-4xl text-[#C5A059]/45 select-none">M</span>
+          </div>
+        </article>
+
+        <!-- ===================================
+             PAGE 3 (z-index: 30) — XOTIRJAMLIK
+             =================================== -->
+        <article class="paper-leaf" data-leaf="3" style="z-index: 30;">
+          <div class="leaf-front">
+            <div class="leaf-cast-shadow"></div>
+            <div class="page-curl-highlight"></div>
+            <div class="tap-zone-prev" data-action="prev" title="Orqaga"></div>
+            <div class="tap-zone-next" data-action="next" title="Keyingi sahifa"></div>
+
+            <div class="gold-inner-frame">
+              <svg class="absolute top-2 left-2 w-6 h-6 text-[#C5A059]/75 pointer-events-none" viewBox="0 0 32 32" fill="none">
+                <path d="M2 22V6C2 3.79086 3.79086 2 6 2H22" stroke="currentColor" stroke-width="1.2" />
+                <circle cx="8" cy="8" r="1.2" fill="currentColor" />
+              </svg>
+              <svg class="absolute top-2 right-2 w-6 h-6 text-[#C5A059]/75 pointer-events-none" viewBox="0 0 32 32" fill="none">
+                <path d="M30 22V6C30 3.79086 28.2091 2 26 2H10" stroke="currentColor" stroke-width="1.2" />
+                <circle cx="24" cy="8" r="1.2" fill="currentColor" />
+              </svg>
+
+              <div>
+                <div class="text-center border-b border-[#C5A059]/25 pb-2.5 mb-3">
+                  <p class="text-[10.5px] tracking-[0.24em] uppercase text-[#9C7E48] font-semibold">
+                    III • XOTIRJAMLIK
+                  </p>
+                  <h2 class="font-serif-letter italic text-[28px] sm:text-[31px] font-semibold text-[#967231] mt-1">
+                    Hech qanday bosimsiz
+                  </h2>
+                </div>
+
+                <div class="ruled-parchment px-1">
+                  <p class="font-lora text-[15.5px] sm:text-[16px] text-[#332A20] leading-[28.5px]">
+                    Sizdan katta va’dalar yoki darhol biror qaror kutilmayapti. Shunchaki, shahar shovqinidan biroz chetda, bir piyola choy ustida 15–20 daqiqa xotirjam suhbatlashishni taklif qilaman. Agar suhbat davom etishini xohlamasangiz — bu sizning mutlaq tanlovingiz bo‘lib qoladi.
+                  </p>
+                </div>
+              </div>
+
+              <div class="pt-2.5 border-t border-[#C5A059]/25 flex items-center justify-between">
+                <button type="button" class="nav-btn" data-action="prev">← Orqaga</button>
+                <span class="font-serif-letter italic text-sm text-[#8A6E3E]">3 / 5</span>
+                <button type="button" class="nav-btn nav-btn-primary" data-action="next">Keyingi sahifa →</button>
+              </div>
+            </div>
+          </div>
+          <div class="leaf-back">
+            <span class="font-serif-letter font-bold text-4xl text-[#C5A059]/45 select-none">M</span>
+          </div>
+        </article>
+
+        <!-- ===================================
+             PAGE 4 (z-index: 20) — QADR + SIGNATURE
+             =================================== -->
+        <article class="paper-leaf" data-leaf="4" style="z-index: 20;">
+          <div class="leaf-front">
+            <div class="leaf-cast-shadow"></div>
+            <div class="page-curl-highlight"></div>
+            <div class="tap-zone-prev" data-action="prev" title="Orqaga"></div>
+            <div class="tap-zone-next" data-action="next" title="Keyingi sahifa"></div>
+
+            <div class="gold-inner-frame">
+              <svg class="absolute top-2 left-2 w-6 h-6 text-[#C5A059]/75 pointer-events-none" viewBox="0 0 32 32" fill="none">
+                <path d="M2 22V6C2 3.79086 3.79086 2 6 2H22" stroke="currentColor" stroke-width="1.2" />
+                <circle cx="8" cy="8" r="1.2" fill="currentColor" />
+              </svg>
+              <svg class="absolute top-2 right-2 w-6 h-6 text-[#C5A059]/75 pointer-events-none" viewBox="0 0 32 32" fill="none">
+                <path d="M30 22V6C30 3.79086 28.2091 2 26 2H10" stroke="currentColor" stroke-width="1.2" />
+                <circle cx="24" cy="8" r="1.2" fill="currentColor" />
+              </svg>
+
+              <div>
+                <div class="text-center border-b border-[#C5A059]/25 pb-2 mb-2.5">
+                  <p class="text-[10.5px] tracking-[0.24em] uppercase text-[#9C7E48] font-semibold">
+                    IV • QADR
+                  </p>
+                  <h2 class="font-serif-letter italic text-[27px] sm:text-[30px] font-semibold text-[#967231] mt-0.5">
+                    Go‘zal kunlar arafasida
+                  </h2>
+                </div>
+
+                <div class="ruled-parchment px-1">
+                  <p class="font-lora text-[15.5px] sm:text-[16px] text-[#332A20] leading-[28.5px]">
+                    Oldinda sizning eng go‘zal va yorqin kunlaringiz turibdi. Shu kunlar arafasida oramizda mavhumlik yoki tushunmovchilik emas, faqat chiroyli va iliq taassurot qolishini istayman. Siz uchun qulay bo‘lgan kun va manzilni o‘zingiz tanlang.
+                  </p>
+                </div>
+
+                <!-- Elegant Right-Aligned Sign-Off -->
+                <div class="mt-4 pr-2 text-right">
+                  <div class="inline-block border-t border-[#C5A059]/35 pt-1.5">
+                    <p class="font-serif-letter italic text-[19px] sm:text-[21px] font-semibold text-[#8E6B2B] tracking-wide">
+                      Hurmat bilan, Farhod
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-2.5 border-t border-[#C5A059]/25 flex items-center justify-between">
+                <button type="button" class="nav-btn" data-action="prev">← Orqaga</button>
+                <span class="font-serif-letter italic text-sm text-[#8A6E3E]">4 / 5</span>
+                <button type="button" class="nav-btn nav-btn-primary" data-action="next">Keyingi sahifa →</button>
+              </div>
+            </div>
+          </div>
+          <div class="leaf-back">
+            <span class="font-serif-letter font-bold text-4xl text-[#C5A059]/45 select-none">M</span>
+          </div>
+        </article>
+
+        <!-- ===================================
+             PAGE 5 (z-index: 10) — SIZNING TANLOVINGIZ
+             =================================== -->
+        <article class="paper-leaf" data-leaf="5" style="z-index: 10;">
+          <div class="leaf-front">
+            <div class="leaf-cast-shadow"></div>
+            <div class="tap-zone-prev" data-action="prev" title="Orqaga"></div>
+
+            <div class="gold-inner-frame">
+              <div>
+                <div class="text-center border-b border-[#C5A059]/25 pb-2 mb-2.5">
+                  <p class="text-[10px] tracking-[0.22em] uppercase text-[#9C7E48] font-semibold">
+                    V • SIZNING TANLOVINGIZ
+                  </p>
+                  <h2 class="font-serif-letter italic text-[26px] sm:text-[28px] font-semibold text-[#332A20]">
+                    Sizning Tanlovingiz
+                  </h2>
+                  <p class="text-[11.5px] text-[#786548] mt-0.5">
+                    O‘zingizga eng qulay kun, vaqt va manzilni belgilang:
+                  </p>
+                </div>
+
+                <!-- Interactive Date, Time & Place Form -->
+                <div id="rsvp-form-box" class="space-y-2.5 text-left">
+                  <!-- Date -->
+                  <div>
+                    <label for="rsvp-date" class="block text-[10.5px] uppercase tracking-wider text-[#856B43] font-semibold mb-1">
+                      📅 Qulay kun
+                    </label>
+                    <input
+                      type="date"
+                      id="rsvp-date"
+                      class="stationery-input font-medium"
+                      value="2026-11-29"
+                    />
+                    <div class="flex flex-wrap gap-1.5 mt-1.5">
+                      <button type="button" class="pill-choice pill-highlight-dec5 date-pill selected" data-date="2026-11-29">
+                        29-noyabr ✨
+                      </button>
+                      <button type="button" class="pill-choice date-pill" data-date="2026-12-05">
+                        5-dekabr
+                      </button>
+                      <button type="button" class="pill-choice" id="custom-date-btn">
+                        Boshqa kun
+                      </button>
+                    </div>
+                    <p id="date-readable" class="text-[11px] text-[#8E6B2B] mt-1 font-medium">
+                      Tanlangan sana: 29-noyabr, 2026-yil
+                    </p>
+                  </div>
+
+                  <!-- Time -->
+                  <div>
+                    <label for="rsvp-time" class="block text-[10.5px] uppercase tracking-wider text-[#856B43] font-semibold mb-1">
+                      🕰 Qulay vaqt
+                    </label>
+                    <div class="flex items-center gap-2">
+                      <input
+                        type="time"
+                        id="rsvp-time"
+                        class="stationery-input w-28 font-medium"
+                        value="18:00"
+                      />
+                      <div class="flex flex-wrap gap-1">
+                        <button type="button" class="pill-choice time-pill" data-time="16:00">16:00</button>
+                        <button type="button" class="pill-choice time-pill selected" data-time="18:00">18:00</button>
+                        <button type="button" class="pill-choice time-pill" data-time="19:00">19:00</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Place -->
+                  <div>
+                    <label for="rsvp-place" class="block text-[10.5px] uppercase tracking-wider text-[#856B43] font-semibold mb-1">
+                      📍 Uchrashuv manzili
+                    </label>
+                    <input
+                      type="text"
+                      id="rsvp-place"
+                      class="stationery-input"
+                      placeholder="Masalan: Bon!, Socials yoki o‘zingiz yoqtirgan boshqa joy"
+                    />
+                  </div>
+
+                  <!-- Submit Button -->
+                  <div class="pt-1">
+                    <button type="button" id="submit-rsvp-btn" class="gold-action-btn">
+                      Javobni yuborish
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Confirmation View -->
+                <div
+                  id="rsvp-confirmed-box"
+                  class="hidden text-center bg-[#FFFDF8] border border-[#C5A059]/45 rounded-2xl p-3.5 space-y-2 my-1"
+                >
+                  <div class="text-xl">✨</div>
+                  <h3 class="font-serif-letter text-2xl font-semibold text-[#332A20]">
+                    Tashakkur, Muslima!
+                  </h3>
+                  <div class="bg-[#FAF3E6] border border-[#C5A059]/30 rounded-xl p-2.5 text-[12px] text-[#332A20] space-y-1 font-medium">
+                    <p id="conf-date">📅 Sana: —</p>
+                    <p id="conf-time">🕰 Vaqt: —</p>
+                    <p id="conf-place">📍 Manzil: —</p>
+                  </div>
+                  <a
+                    id="tg-direct-link"
+                    href="https://t.me/Abdukhalikov_F"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="gold-action-btn block text-center no-underline"
+                  >
+                    ✈️ @Abdukhalikov_F ga yuborish
+                  </a>
+                  <button
+                    type="button"
+                    id="edit-rsvp-btn"
+                    class="text-[11px] text-[#856B43] underline block mx-auto pt-0.5"
+                  >
+                    Sana yoki manzilni o‘zgartirish
+                  </button>
+                </div>
+              </div>
+
+              <div class="pt-2 border-t border-[#C5A059]/25 flex items-center justify-between">
+                <button type="button" class="nav-btn" data-action="prev">← Orqaga</button>
+                <span class="font-serif-letter italic text-sm text-[#8A6E3E]">5 / 5</span>
+                <span class="text-[11px] text-[#9C7E48] font-medium">Yakuniy sahifa</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- Confirmation Toast -->
+  <div id="toast" class="toast-msg">Javob nusxalandi! Endi Telegramda yuborishingiz mumkin ✨</div>
+
+  <script>
+    // ==========================================
+    // 1. AMBIENT GOLDEN DUST PARTICLES
+    // ==========================================
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function initParticles() {
+      particles = [];
+      const count = Math.min(34, Math.floor((canvas.width * canvas.height) / 28000));
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 2.1 + 0.8,
+          vx: (Math.random() - 0.5) * 0.25,
+          vy: -Math.random() * 0.3 - 0.08,
+          alpha: Math.random() * 0.5 + 0.2,
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+    }
+    initParticles();
+
+    function spawnBurstSparkles() {
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      for (let i = 0; i < 24; i++) {
+        const angle = (Math.PI * 2 * i) / 24;
+        const speed = 1.2 + Math.random() * 2.2;
+        particles.push({
+          x: cx,
+          y: cy,
+          r: Math.random() * 2.6 + 1.2,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 0.8,
+          alpha: 0.9,
+          phase: 0
+        });
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.phase += 0.02;
+        if (p.y < -12) p.y = canvas.height + 12;
+        if (p.x < -12) p.x = canvas.width + 12;
+        if (p.x > canvas.width + 12) p.x = -12;
+
+        const a = p.alpha * (0.65 + 0.35 * Math.sin(p.phase));
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(197, 160, 89, ${a})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // ==========================================
+    // 2. UN-MUTABLE AUTO-START ROMANTIC PIANO:
+    //    YIRUMA - "RIVER FLOWS IN YOU" (WEB AUDIO API)
+    // ==========================================
+    let audioCtx = null;
+    let reverbNode = null;
+    let masterGain = null;
+    let isMelodyRunning = false;
+    let stepIndex = 0;
+
+    const N = {
+      F3: 174.61, Fs3: 185.00, A3: 220.00, B3: 246.94, Cs4: 277.18,
+      D4: 293.66, E4: 329.63, Fs4: 369.99, Gs4: 415.30, A4: 440.00,
+      B4: 493.88, Cs5: 554.37, D5: 587.33, E5: 659.25, Fs5: 739.99,
+      Gs5: 830.61, A5: 880.00
+    };
+
+    const riverFlowsMelody = [
+      // Phrase 1: Iconic opening motif
+      [N.A5,  [N.Fs3, N.Cs4, N.A4], 0.90, 0.11],
+      [N.Gs5, [],                   0.55, 0.08],
+      [N.A5,  [],                   0.55, 0.10],
+      [N.Gs5, [],                   0.55, 0.08],
+      [N.A5,  [N.D4, N.A4],         0.85, 0.105],
+      [N.E5,  [],                   0.65, 0.085],
+      [N.A5,  [],                   0.65, 0.10],
+      [N.D5,  [N.A3, N.E4],         1.10, 0.105],
+
+      // Phrase 2: Gentle ascent
+      [N.A4,  [],                   0.45, 0.07],
+      [N.Cs5, [],                   0.45, 0.08],
+      [N.A5,  [N.E4, N.B4],         0.85, 0.11],
+      [N.Gs5, [],                   0.55, 0.08],
+      [N.A5,  [],                   0.55, 0.10],
+      [N.Gs5, [],                   0.55, 0.08],
+      [N.A5,  [N.Fs3, N.Cs4, N.A4], 0.85, 0.105],
+      [N.E5,  [],                   0.65, 0.085],
+      [N.A5,  [],                   0.65, 0.10],
+      [N.D5,  [N.D4, N.A4],         1.10, 0.105],
+
+      // Phrase 3: Flowing cascade
+      [N.A4,  [],                   0.42, 0.07],
+      [N.Cs5, [],                   0.42, 0.08],
+      [N.E5,  [N.A3, N.E4, N.Cs5],  0.75, 0.10],
+      [N.Fs5, [],                   0.50, 0.09],
+      [N.E5,  [],                   0.50, 0.088],
+      [N.D5,  [N.E4, N.Gs4, N.B4],  0.75, 0.095],
+      [N.Cs5, [],                   0.55, 0.085],
+      [N.B4,  [],                   0.65, 0.082],
+      [N.A4,  [N.Fs3, N.Cs4, N.A4], 1.25, 0.098],
+
+      // Phrase 4: Tender resolution
+      [N.Cs5, [],                   0.50, 0.08],
+      [N.D5,  [N.D4, N.Fs4, N.A4],  0.70, 0.095],
+      [N.E5,  [],                   0.65, 0.10],
+      [N.Cs5, [],                   0.55, 0.085],
+      [N.B4,  [N.E4, N.Gs4],        0.85, 0.092],
+      [N.A4,  [],                   0.60, 0.082],
+      [N.Gs4, [],                   0.65, 0.078],
+      [N.A4,  [N.A3, N.E4, N.Cs5],  1.45, 0.10]
+    ];
+
+    function initAudioEngine() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+
+        masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(0.85, audioCtx.currentTime);
+        masterGain.connect(audioCtx.destination);
+
+        const delay = audioCtx.createDelay();
+        delay.delayTime.setValueAtTime(0.28, audioCtx.currentTime);
+        const feedback = audioCtx.createGain();
+        feedback.gain.setValueAtTime(0.28, audioCtx.currentTime);
+        const wetFilter = audioCtx.createBiquadFilter();
+        wetFilter.type = 'lowpass';
+        wetFilter.frequency.setValueAtTime(1400, audioCtx.currentTime);
+
+        delay.connect(wetFilter);
+        wetFilter.connect(feedback);
+        feedback.connect(delay);
+        wetFilter.connect(masterGain);
+
+        reverbNode = delay;
+      }
+    }
+
+    function playExpressivePianoNote(freq, duration = 1.8, volume = 0.09) {
+      if (!audioCtx || audioCtx.state !== 'running') return;
+      const now = audioCtx.currentTime;
+
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      const subOsc = audioCtx.createOscillator();
+
+      const noteGain = audioCtx.createGain();
+      const overtoneGain = audioCtx.createGain();
+      const subGain = audioCtx.createGain();
+      const toneFilter = audioCtx.createBiquadFilter();
+
+      toneFilter.type = 'lowpass';
+      toneFilter.frequency.setValueAtTime(2100, now);
+      toneFilter.frequency.exponentialRampToValueAtTime(650, now + duration);
+
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(freq, now);
+
+      osc2.type = 'triangle';
+      osc2.frequency.setValueAtTime(freq * 2, now);
+      overtoneGain.gain.setValueAtTime(0.14, now);
+
+      subOsc.type = 'sine';
+      subOsc.frequency.setValueAtTime(freq * 0.5, now);
+      subGain.gain.setValueAtTime(0.18, now);
+
+      noteGain.gain.setValueAtTime(0.0001, now);
+      noteGain.gain.exponentialRampToValueAtTime(volume, now + 0.032);
+      noteGain.gain.exponentialRampToValueAtTime(volume * 0.48, now + 0.36);
+      noteGain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.55);
+
+      osc1.connect(toneFilter);
+      osc2.connect(overtoneGain);
+      overtoneGain.connect(toneFilter);
+      subOsc.connect(subGain);
+      subGain.connect(toneFilter);
+
+      toneFilter.connect(noteGain);
+      noteGain.connect(masterGain);
+      if (reverbNode) noteGain.connect(reverbNode);
+
+      osc1.start(now);
+      osc2.start(now);
+      subOsc.start(now);
+
+      const endAt = now + duration + 0.6;
+      osc1.stop(endAt);
+      osc2.stop(endAt);
+      subOsc.stop(endAt);
+    }
+
+    function playSoftPaperRustle(intensity = 0.08) {
+      if (!audioCtx || audioCtx.state !== 'running') return;
+      const now = audioCtx.currentTime;
+      const duration = 0.42;
+      const sampleCount = Math.floor(audioCtx.sampleRate * duration);
+      const buffer = audioCtx.createBuffer(1, sampleCount, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+
+      let b0 = 0, b1 = 0, b2 = 0;
+      for (let i = 0; i < sampleCount; i++) {
+        const white = Math.random() * 2 - 1;
+        b0 = 0.997 * b0 + white * 0.029;
+        b1 = 0.985 * b1 + white * 0.032;
+        b2 = 0.950 * b2 + white * 0.048;
+        data[i] = (b0 + b1 + b2 + white * 0.16) * 0.5;
+      }
+
+      const noiseSource = audioCtx.createBufferSource();
+      noiseSource.buffer = buffer;
+
+      const bandpass = audioCtx.createBiquadFilter();
+      bandpass.type = 'bandpass';
+      bandpass.frequency.setValueAtTime(900, now);
+      bandpass.frequency.exponentialRampToValueAtTime(2200, now + duration * 0.55);
+      bandpass.frequency.exponentialRampToValueAtTime(1050, now + duration);
+      bandpass.Q.setValueAtTime(1.5, now);
+
+      const env = audioCtx.createGain();
+      env.gain.setValueAtTime(0.0001, now);
+      env.gain.exponentialRampToValueAtTime(intensity, now + 0.09);
+      env.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+      noiseSource.connect(bandpass);
+      bandpass.connect(env);
+      env.connect(masterGain);
+
+      noiseSource.start(now);
+      noiseSource.stop(now + duration);
+    }
+
+    function runMelodyLoop() {
+      if (!audioCtx || audioCtx.state !== 'running') {
+        isMelodyRunning = false;
+        return;
+      }
+
+      const [leadFreq, chordFreqs, dur, vel] = riverFlowsMelody[stepIndex % riverFlowsMelody.length];
+      playExpressivePianoNote(leadFreq, dur * 1.75, vel);
+
+      chordFreqs.forEach((cFreq, idx) => {
+        setTimeout(() => {
+          if (audioCtx && audioCtx.state === 'running') {
+            playExpressivePianoNote(cFreq, 2.3, vel * 0.44);
+          }
+        }, idx * 45);
+      });
+
+      stepIndex++;
+      setTimeout(runMelodyLoop, dur * 470);
+    }
+
+    function unlockAndStartContinuousMusic() {
+      initAudioEngine();
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume().then(() => {
+          if (!isMelodyRunning) {
+            isMelodyRunning = true;
+            runMelodyLoop();
+          }
+        }).catch(() => {});
+      } else if (audioCtx.state === 'running' && !isMelodyRunning) {
+        isMelodyRunning = true;
+        runMelodyLoop();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', unlockAndStartContinuousMusic);
+    window.addEventListener('load', unlockAndStartContinuousMusic);
+
+    const gestureEvents = ['pointerdown', 'touchstart', 'click', 'keydown', 'scroll'];
+    gestureEvents.forEach((evtName) => {
+      window.addEventListener(evtName, unlockAndStartContinuousMusic, { capture: true, passive: true });
+    });
+
+    // ==========================================
+    // 3. SEALED ENVELOPE OPENING SEQUENCE
+    // ==========================================
+    const envelopeCover = document.getElementById('envelope-cover');
+    const bookStage = document.getElementById('book-stage');
+    let isOpened = false;
+
+    function openEnvelope() {
+      unlockAndStartContinuousMusic();
+      if (isOpened) return;
+      isOpened = true;
+
+      playSoftPaperRustle(0.11);
+      spawnBurstSparkles();
+
+      envelopeCover.classList.add('opening');
+      setTimeout(() => {
+        envelopeCover.style.display = 'none';
+        bookStage.classList.add('visible');
+        requestAnimationFrame(() => {
+          bookStage.classList.add('animate-in');
+        });
+      }, 720);
+    }
+
+    envelopeCover.addEventListener('click', openEnvelope);
+    envelopeCover.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openEnvelope();
+      }
+    });
+
+    // ==========================================
+    // 4. SLOW, FLICKER-FREE 3D PAGE TURNING
+    // ==========================================
+    let currentPage = 1;
+    const totalPages = 5;
+    let isTurning = false;
+    const leaves = Array.from(document.querySelectorAll('.paper-leaf'));
+
+    function updateLeafStackOrder() {
+      leaves.forEach((leaf, idx) => {
+        const pageNum = idx + 1;
+        if (pageNum < currentPage) {
+          leaf.style.zIndex = pageNum;
+        } else {
+          leaf.style.zIndex = (totalPages - idx) * 10;
+        }
+      });
+    }
+    updateLeafStackOrder();
+
+    function turnNextPage() {
+      unlockAndStartContinuousMusic();
+      if (isTurning || currentPage >= totalPages) return;
+      isTurning = true;
+
+      const flippingLeaf = leaves[currentPage - 1];
+      const nextLeaf = leaves[currentPage];
+
+      flippingLeaf.style.zIndex = 90;
+      flippingLeaf.classList.remove('settled-hidden');
+
+      const shadowEl = nextLeaf.querySelector('.leaf-cast-shadow');
+      if (shadowEl) {
+        shadowEl.classList.remove('sweeping');
+        void shadowEl.offsetWidth;
+        shadowEl.classList.add('sweeping');
+      }
+
+      requestAnimationFrame(() => {
+        flippingLeaf.classList.add('flipped');
+      });
+
+      playSoftPaperRustle(0.085);
+      currentPage++;
+
+      setTimeout(() => {
+        flippingLeaf.classList.add('settled-hidden');
+        updateLeafStackOrder();
+        isTurning = false;
+      }, 1360);
+    }
+
+    function turnPrevPage() {
+      unlockAndStartContinuousMusic();
+      if (isTurning || currentPage <= 1) return;
+      isTurning = true;
+
+      currentPage--;
+      const restoringLeaf = leaves[currentPage - 1];
+
+      restoringLeaf.classList.remove('settled-hidden');
+      restoringLeaf.style.zIndex = 90;
+
+      requestAnimationFrame(() => {
+        restoringLeaf.classList.remove('flipped');
+      });
+
+      playSoftPaperRustle(0.08);
+
+      setTimeout(() => {
+        updateLeafStackOrder();
+        isTurning = false;
+      }, 1360);
+    }
+
+    document.getElementById('book-container').addEventListener('click', (e) => {
+      const trigger = e.target.closest('[data-action]');
+      if (!trigger) return;
+      const action = trigger.dataset.action;
+      if (action === 'next') turnNextPage();
+      else if (action === 'prev') turnPrevPage();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!isOpened) return;
+      if (e.target.tagName === 'INPUT') return;
+      if (e.key === 'ArrowRight') turnNextPage();
+      else if (e.key === 'ArrowLeft') turnPrevPage();
+    });
+
+    // Touch Swipe Support
+    let touchStartX = 0;
+    let touchStartY = 0;
+    const bookContainer = document.getElementById('book-container');
+
+    bookContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    bookContainer.addEventListener('touchend', (e) => {
+      if (e.target.tagName === 'INPUT') return;
+      const dx = e.changedTouches[0].screenX - touchStartX;
+      const dy = e.changedTouches[0].screenY - touchStartY;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.35) {
+        if (dx < 0) turnNextPage();
+        else turnPrevPage();
+      }
+    }, { passive: true });
+
+    // ==========================================
+    // 5. PAGE 5: INTERACTIVE DATE, TIME & PLACE RSVP
+    // ==========================================
+    const rsvpDate = document.getElementById('rsvp-date');
+    const rsvpTime = document.getElementById('rsvp-time');
+    const rsvpPlace = document.getElementById('rsvp-place');
+    const dateReadable = document.getElementById('date-readable');
+
+    const uzMonths = [
+      'yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun',
+      'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'
+    ];
+
+    function formatUzbekDate(isoDate) {
+      if (!isoDate) return '29-noyabr, 2026-yil';
+      const [y, m, d] = isoDate.split('-').map(Number);
+      return `${d}-${uzMonths[m - 1]}, ${y}-yil`;
+    }
+
+    function syncDateUI() {
+      dateReadable.textContent = `Tanlangan sana: ${formatUzbekDate(rsvpDate.value)}`;
+      document.querySelectorAll('.date-pill').forEach((btn) => {
+        btn.classList.toggle('selected', btn.dataset.date === rsvpDate.value);
+      });
+    }
+
+    rsvpDate.addEventListener('change', syncDateUI);
+    syncDateUI();
+
+    document.querySelectorAll('.date-pill').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        rsvpDate.value = btn.dataset.date;
+        syncDateUI();
+      });
+    });
+
+    document.getElementById('custom-date-btn').addEventListener('click', () => {
+      rsvpDate.focus();
+      if (typeof rsvpDate.showPicker === 'function') {
+        try {
+          rsvpDate.showPicker();
+        } catch (err) {}
+      }
+    });
+
+    document.querySelectorAll('.time-pill').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        rsvpTime.value = btn.dataset.time;
+        document.querySelectorAll('.time-pill').forEach((b) => b.classList.remove('selected'));
+        btn.classList.add('selected');
+      });
+    });
+
+    rsvpTime.addEventListener('input', () => {
+      document.querySelectorAll('.time-pill').forEach((b) => {
+        b.classList.toggle('selected', b.dataset.time === rsvpTime.value);
+      });
+    });
+
+    function copyTextFallback(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3200);
+    }
+
+    const rsvpFormBox = document.getElementById('rsvp-form-box');
+    const rsvpConfirmedBox = document.getElementById('rsvp-confirmed-box');
+
+    document.getElementById('submit-rsvp-btn').addEventListener('click', () => {
+      const chosenDate = formatUzbekDate(rsvpDate.value);
+      const chosenTime = rsvpTime.value || '18:00';
+      const chosenPlace = rsvpPlace.value.trim() || 'O‘zingiz tanlagan manzil';
+
+      document.getElementById('conf-date').textContent = `📅 Sana: ${chosenDate}`;
+      document.getElementById('conf-time').textContent = `🕰 Vaqt: ${chosenTime}`;
+      document.getElementById('conf-place').textContent = `📍 Manzil: ${chosenPlace}`;
+
+      const replyMessage =
+        `Assalomu alaykum, Farhod! Taklifnomani ko‘rdim.\n` +
+        `📅 Sana: ${chosenDate}\n` +
+        `🕰 Vaqt: ${chosenTime}\n` +
+        `📍 Manzil: ${chosenPlace}`;
+
+      copyTextFallback(replyMessage);
+
+      const encodedMsg = encodeURIComponent(replyMessage);
+      const tgWebDirectUrl = `https://t.me/Abdukhalikov_F?text=${encodedMsg}`;
+      const tgAppDirectUrl = `tg://resolve?domain=Abdukhalikov_F&text=${encodedMsg}`;
+
+      document.getElementById('tg-direct-link').href = tgWebDirectUrl;
+
+      rsvpFormBox.classList.add('hidden');
+      rsvpConfirmedBox.classList.remove('hidden');
+
+      showToast('Javob nusxalandi va @Abdukhalikov_F ga yo‘naltirilmoqda ✨');
+
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (isMobile) {
+        window.location.href = tgAppDirectUrl;
+        setTimeout(() => {
+          window.open(tgWebDirectUrl, '_blank', 'noopener,noreferrer');
+        }, 700);
+      } else {
+        window.open(tgWebDirectUrl, '_blank', 'noopener,noreferrer');
+      }
+    });
+
+    document.getElementById('edit-rsvp-btn').addEventListener('click', () => {
+      rsvpConfirmedBox.classList.add('hidden');
+      rsvpFormBox.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
